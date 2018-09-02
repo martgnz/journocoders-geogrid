@@ -1,4 +1,3 @@
-library(sf)
 library(geogrid)
 library(geojsonio)
 
