@@ -78,7 +78,7 @@ Now we will use `geogrid` to generate some hexagons of the [Local Authorities](h
 
 ### Seeding the grid
 
-First, we need to load the library and switch to our the project folder
+First, we need to load the library and switch to the project folder
 
 ```r
 library(geojsonio)
@@ -136,10 +136,38 @@ Now let's retrieve a SpatialDataFrame out of the hexagon. This will take a long 
 df_hex <- assign_polygons(df, tmp)
 ```
 
-And now you can export it to TopoJSON
+And now you can export it to TopoJSON (you can inspect the resulting file with [mapshaper](http://mapshaper.org))
+
+![Mapshaper](https://user-images.githubusercontent.com/1236790/44956344-50f23200-aeba-11e8-90b9-cbd36265f866.png)
 
 ```r
 topojson_write(df_hex, object_name = "local_authorities", file = "output/local_authorities.json")
 ```
 
 ## Visualising with D3
+
+Now that we have the geometry, let the fun begin. If you don't have it already, please install a local http server to preview the map. If you have macOS, open the terminal (open Spotlight with <kbd>⌘ + space</kbd> and search for terminal), navigate to the project folder and run the built-in Python server
+
+```sh
+$ cd ~/YOUR/PROJECT/FOLDER/journocoders-geogrid && python -m SimpleHTTPServer
+```
+
+If you use Windows or Linux you can also use that if you have Python installed, but in general I recommend to install [node](https://nodejs.org/en/download/) and use `http-server` instead.
+
+```
+npm i -g http-server
+```
+
+And the same applies
+
+```sh
+$ cd ~/YOUR/PROJECT/FOLDER/journocoders-geogrid && http-server
+```
+
+Now you can open the same folder with your code editor of choice and go to `index.html`.
+
+### Rendering the map
+
+We will visualise [job density](https://www.nomisweb.co.uk/query/construct/summary.asp?mode=construct&version=0&dataset=57), a measure of the number of jobs in an area divided by the resident population aged 16-64. A job density of 1.0 means that there's a job for every resident aged 16-64.
+
+### Adding interaction

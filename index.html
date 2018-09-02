@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.tooltip {
+  position: absolute;
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 150px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #aaa;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+path {
+  stroke: white;
+  stroke-opacity: 0.3;
+  pointer-events: all;
+}
+
+path:hover {
+  stroke: black;
+  stroke-width: 2;
+  stroke-opacity: 1;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v3.min.js"></script>
+<script>
+
+const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+
+const width = 500 - margin.left - margin.right;
+const height = 600 - margin.top - margin.bottom;
+
+const tooltip = d3.select('body')
+  .append('div')
+  .attr('class', 'tooltip');
+
+const svg = d3.select('body')
+  .append('svg')
+  .attr('width', width + margin.left + margin.right)
+  .attr('height', height + margin.top + margin.bottom)
+  .append('g')
+  .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+// Map is already projected
+const projection = d3
+  .geoIdentity()
+  .reflectY(true);
+
+const z = d3.scaleThreshold()
+  .domain([1])
+  .range(['#ef8a62','#67a9cf'])
+
+const density = d3.map();
+
+d3.queue()
+  .defer(d3.json, 'output/local_authorities.json')
+  .defer(d3.csv, 'output/job_density.csv', d => {
+    d.value = +d.value;
+
+    density.set(d.authority_id, d.value);
+
+    return d;
+  })
+  .await(ready);
+
+function ready(err, la, data) {
+   if (err) throw err;
+
+  // Generate our topojson object
+  const feature = topojson.feature(la, la.objects.local_authorities);
+
+  // Fit map to our width and height
+  projection.fitSize([width, height], feature);
+
+  const path = d3.geoPath()
+    .projection(projection);
+
+  // Render
+  svg.selectAll('path')
+    .data(feature.features)
+    .enter()
+    .append('path')
+    .attr('d', path)
+    .attr('fill', d => z(density.get(d.properties.lad17cd)))
+    .on('mousemove', mousemoved)
+    .on('mouseleave', mouseleft);
+}
+
+function mousemoved(d) {
+  const [ x, y ] = d3.mouse(svg.node());
+  const { lad17nm, lad17cd } = d.properties;
+
+  d3.select(this).raise();
+
+  tooltip
+    .style('visibility', 'visible')
+    .style('left', `${x - 60}px`)
+    .style('top', `${y - 70}px`)
+    .html(`
+      <div><strong>${lad17nm}</strong></div>
+      <div class="flex">
+        <div>Job density</div>
+        <div>${density.get(lad17cd)}</div>
+      </div>
+    `)
+}
+
+function mouseleft() {
+  tooltip.style('visibility', 'hidden');
+}
+</script>
