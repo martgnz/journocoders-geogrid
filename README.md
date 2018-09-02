@@ -170,9 +170,97 @@ Now you can open the same folder with your code editor of choice and go to `inde
 
 We will visualise [job density](https://www.nomisweb.co.uk/query/construct/summary.asp?mode=construct&version=0&dataset=57), a measure of the number of jobs in an area divided by the resident population aged 16-64. A job density of 1.0 means that there's a job for every resident aged 16-64.
 
-If you have some experience with JavaScript this part will be way easier. Be wary that the code is written in [ES2015](https://developers.google.com/web/shows/ttt/series-2/es2015), which makes it shorter and more concise.
+If you have some experience with JavaScript this part will be way easier. Be wary that the code is written in [ES2015](https://developers.google.com/web/shows/ttt/series-2/es2015).
 
-…
+There's two HTML files. The one we will use, `index.html` is heavily commented and contains a basic skeleton that creates a container for our map. The other, `index-completed.html`, contains the finished map with minimal annotation.
+
+I won't reference basic HTML or JavaScript because it would make the tutorial too long. You can do a [MDN guide](https://developer.mozilla.org/en-US/docs/Learn/HTML) if you're completely lost.
+
+Open `index.html` with your browser of choice. If you open the DevTools you'll see an empty SVG element. This is where we will draw the map. I've already added the code that renders that container, you don't need to change that.
+
+Go to line 44 and think about geographic data for a moment. As you may know, all maps need a [projection](https://www.colorado.edu/geography/gcraft/notes/mapproj/mapproj_f.html). In this case we are slightly lucky. This data is already on planar geometry so we will use D3's [geoIdentity](https://github.com/d3/d3-geo#geoIdentity) function.
+
+```javascript
+const projection = d3
+  .geoIdentity()
+  .reflectY(true) // see https://github.com/d3/d3-geo#identity_reflectY
+```
+
+Now that we have a projection we are quite close to have something on screen. Although it may seem surprising, D3's geo functions are powerful and at the same time, quick to write.
+
+You can go inside the `ready` function, here we have the data already loaded. You can create a [TopoJSON](https://github.com/topojson/topojson-client) object (a compressed form of GeoJSON).
+
+```javascript
+const feature = topojson.feature(la, la.objects.local_authorities);
+```
+
+We created a feature with our local authorities. Each TopoJSON can have multiple features inside so we need to specify that. You can use a website like [mapshaper](http://mapshaper.org) (referenced earlier) to inspect your geodata and see that in our case there's only one called `local_authorities`.
+
+We have a projection and a TopoJSON object, we need a way to render those objects to the screen. For that there's the `d3.geoPath` function, that transforms coordinates to SVG.
+
+```javascript
+const path = d3
+  .geoPath()
+  .projection(projection)
+```
+
+And now let's try to draw something to screen!
+
+```javascript
+svg.append('path') // SVG complex figures are created with this
+  .datum(feature) // Attach our TopoJSON data to the SVG
+  .attr('d', path) // This attribute holds the raw polygon information
+```
+
+Oops... Nothing. Not too fast. When this happens your first reaction should be opening the DevTools. There's always something you can get from there.
+
+![Nada](https://user-images.githubusercontent.com/1236790/44960664-650a5380-aefb-11e8-86bb-8835e6344778.png)
+
+If you hover the mouse over the `path` element you can see that it seems to be located way outside of our screen. What could be causing this?
+
+If you think about it for a bit, you'll realise that we haven't told D3 *where* our geographic data is on the globe. This is very **important**. We need to translate and center the map.
+
+If you look over the [d3-geo documentation](https://github.com/d3/d3-geo#projection_fitSize) you'll see something called `fitSize`. This handy function will translate and center our map automagically if we pass it our object and the width and height.
+
+```javascript
+projection.fitSize([width, height], feature);
+```
+
+If you add this code after we declare the `feature` variable you'll hopefully see the map on screen. Here's the code of this part so far
+
+```javascript
+// Create our topojson object
+const feature = topojson.feature(la, la.objects.local_authorities);
+
+// Fit our projection
+projection.fitSize([width, height], feature);
+
+// You need a path generator to render the map
+const path = d3
+  .geoPath()
+  .projection(projection);
+
+// At last! Here you attach the map to our SVG
+svg.append('path')
+  .datum(feature)
+  .attr('d', path);
+```
+
+However, if you pass the mouse over it something strange happens, the entire map turns red! Christmas is not here yet so let's change that.
+
+The important bit is inside that esoteric `datum` instruction. The way D3 works is by attaching nodes to the DOM with our data. If you read the code you'll notice that we have only created *one* path. To be able to mouseover through every individual authority we need to find a way to render all of them separately.
+
+This is where D3 shines, its core functionality. The [data join](https://bost.ocks.org/mike/join/). Don't fear though, it's less painful than you think. We only need to add **two** lines.
+
+```javascript
+svg.selectAll('path') // Select our desired target elements
+  .data(feature.features) // Pass every feature, not only one!
+  .enter() // Enter, start the looping, everything will be repeated for every data point
+  .append('path') // Attach the paths we selected at first
+  .attr('d', path); // And render them!
+```
+
+Reload the page and you'll see all the authorities rendered in their own elements.
 
 ### Adding interaction
 …

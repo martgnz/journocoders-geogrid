@@ -32,7 +32,6 @@ const height = 600 - margin.top - margin.bottom;
 
 // Here we can start adding a div for the tooltip
 // You can do this at the end
-const tooltip;
 
 // Attach the SVG element to the DOM
 const svg = d3.select('body')
@@ -45,17 +44,14 @@ const svg = d3.select('body')
 // Specify our projection
 // This will be different with every map you make
 // https://github.com/d3/d3-geo
-const projection;
 
 // Here we can write our colour scale
 // Which scale do you think it's more appropiate?
 // https://github.com/d3/d3-scale
-const z;
 
 // Here we can declare our Map to associate
 // the geographic data with our external dataset
 // https://github.com/d3/d3-collection/#maps
-const density;
 
 // Load data asynchronously
 d3.queue()
@@ -72,18 +68,17 @@ d3.queue()
   .await(ready); // This will run once everything is loaded
 
 // The first argument always contains an error
-// It will be filled if the data doesn't load
+// it will be filled if the data doesn't load
 // The following arguments follow the same order
 // of the data you established on the queue
 function ready(err, la, data) {
    if (err) throw err;
 
-
   // Create our topojson object
-  const feature;
+
+  // Fit our projection
 
   // You need a path generator to render the map
-  const path;
 
   // At last! Here you will attach the map to our SVG
   // https://d3js.org/#enter-exit
