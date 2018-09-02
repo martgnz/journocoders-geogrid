@@ -262,5 +262,9 @@ svg.selectAll('path') // Select our desired target elements
 
 Reload the page and you'll see all the authorities rendered in their own elements.
 
+### Visualising data
+
+…
+
 ### Adding interaction
 …
