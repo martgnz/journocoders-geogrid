@@ -172,7 +172,7 @@ We will visualise [job density](https://www.nomisweb.co.uk/query/construct/summa
 
 If you have some experience with JavaScript this part will be way easier. Be wary that the code is written in [ES2015](https://developers.google.com/web/shows/ttt/series-2/es2015).
 
-There's two HTML files. The one we will use, `index.html` is heavily commented and contains a basic skeleton that creates a container for our map. The other, `index-completed.html`, contains the finished map with minimal annotation.
+There's two HTML files. The one we will use, `index.html` is heavily commented and contains a basic skeleton with a container. The other, `index-completed.html`, has the finished map with minimal annotation.
 
 I won't reference basic HTML or JavaScript because it would make the tutorial too long. You can do a [MDN guide](https://developer.mozilla.org/en-US/docs/Learn/HTML) if you're completely lost.
 
@@ -194,9 +194,9 @@ You can go inside the `ready` function, here we have the data already loaded. Yo
 const feature = topojson.feature(la, la.objects.local_authorities);
 ```
 
-We created a feature with our local authorities. Each TopoJSON can have multiple features inside so we need to specify that. You can use a website like [mapshaper](http://mapshaper.org) (referenced earlier) to inspect your geodata and see that in our case there's only one called `local_authorities`.
+Each TopoJSON can have multiple features inside so we need to specify one. You can use a website like [mapshaper](http://mapshaper.org) (referenced earlier) to inspect your geodata. In our case there's only one called `local_authorities`.
 
-We have a projection and a TopoJSON object, we need a way to render those objects to the screen. For that there's the `d3.geoPath` function, that transforms coordinates to SVG.
+We have a projection and a TopoJSON object, let's render those objects to the screen. For that there's the `d3.geoPath` function, that transforms coordinates to SVG.
 
 ```javascript
 const path = d3
@@ -207,12 +207,12 @@ const path = d3
 And now let's try to draw something to screen!
 
 ```javascript
-svg.append('path') // SVG complex figures are created with this
+svg.append('path') // SVG complex figures are created with this element
   .datum(feature) // Attach our TopoJSON data to the SVG
   .attr('d', path) // This attribute holds the raw polygon information
 ```
 
-Oops... Nothing. Not too fast. When this happens your first reaction should be opening the DevTools. There's always something you can get from there.
+Oops... Nothing. Not too fast. When this happens your first reaction should be opening the DevTools. There's always something you can inspect there.
 
 ![Nada](https://user-images.githubusercontent.com/1236790/44960664-650a5380-aefb-11e8-86bb-8835e6344778.png)
 
@@ -250,14 +250,14 @@ However, if you pass the mouse over it something strange happens, the entire map
 
 The important bit is inside that esoteric `datum` instruction. The way D3 works is by attaching nodes to the DOM with our data. If you read the code you'll notice that we have only created *one* path. To be able to mouseover through every individual authority we need to find a way to render all of them separately.
 
-This is where D3 shines, its core functionality. The [data join](https://bost.ocks.org/mike/join/). Don't fear though, it's less painful than you think. We only need to add **two** lines.
+This is where D3 shines, its core functionality. The [data join](https://bost.ocks.org/mike/join/). Don't fear though, it's less painful than you think. We only need to add or modify **three** lines.
 
 ```javascript
 svg.selectAll('path') // Select our desired target elements
-  .data(feature.features) // Pass every feature, not only one!
-  .enter() // Enter, start the looping, everything will be repeated for every data point
-  .append('path') // Attach the paths we selected at first
-  .attr('d', path); // And render them!
+  .data(feature.features) // Pass every feature, not just one!
+  .enter() // Start the looping, everything from here will be repeated for each data point
+  .append('path')
+  .attr('d', path);
 ```
 
 Reload the page and you'll see all the authorities rendered in their own elements.
