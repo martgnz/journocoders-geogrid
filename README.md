@@ -170,4 +170,9 @@ Now you can open the same folder with your code editor of choice and go to `inde
 
 We will visualise [job density](https://www.nomisweb.co.uk/query/construct/summary.asp?mode=construct&version=0&dataset=57), a measure of the number of jobs in an area divided by the resident population aged 16-64. A job density of 1.0 means that there's a job for every resident aged 16-64.
 
+If you have some experience with JavaScript this part will be way easier. Be wary that the code is written in [ES2015](https://developers.google.com/web/shows/ttt/series-2/es2015), which makes it shorter and more concise.
+
+…
+
 ### Adding interaction
+…

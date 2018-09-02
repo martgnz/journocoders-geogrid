@@ -2,51 +2,39 @@
 <meta charset="utf-8">
 <style>
 
-.tooltip {
-  position: absolute;
-  font-family: sans-serif;
-  font-size: 14px;
-  width: 150px;
-  padding: 10px;
-  background: white;
-  border: 1px solid #aaa;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
+/* Write your styles here */
 path {
-  stroke: white;
-  stroke-opacity: 0.3;
-  pointer-events: all;
+  stroke: black;
+  fill: none;
 }
 
 path:hover {
-  stroke: black;
-  stroke-width: 2;
-  stroke-opacity: 1;
+  fill: red;
 }
 
 </style>
 <body>
+
+<!-- Load D3 and TopoJSON -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/topojson.v3.min.js"></script>
+
+<!-- Our JavaScript starts here -->
 <script>
 
+// Configure the chart margins
+// You'll see this convention on many D3 examples
+// https://bl.ocks.org/mbostock/3019563
 const margin = { top: 10, right: 10, bottom: 10, left: 10 };
 
 const width = 500 - margin.left - margin.right;
 const height = 600 - margin.top - margin.bottom;
 
-const tooltip = d3.select('body')
-  .append('div')
-  .attr('class', 'tooltip');
+// Here we can start adding a div for the tooltip
+// You can do this at the end
+const tooltip;
 
+// Attach the SVG element to the DOM
 const svg = d3.select('body')
   .append('svg')
   .attr('width', width + margin.left + margin.right)
@@ -54,71 +42,50 @@ const svg = d3.select('body')
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-// Map is already projected
-const projection = d3
-  .geoIdentity()
-  .reflectY(true);
+// Specify our projection
+// This will be different with every map you make
+// https://github.com/d3/d3-geo
+const projection;
 
-const z = d3.scaleThreshold()
-  .domain([1])
-  .range(['#ef8a62','#67a9cf'])
+// Here we can write our colour scale
+// Which scale do you think it's more appropiate?
+// https://github.com/d3/d3-scale
+const z;
 
-const density = d3.map();
+// Here we can declare our Map to associate
+// the geographic data with our external dataset
+// https://github.com/d3/d3-collection/#maps
+const density;
 
+// Load data asynchronously
 d3.queue()
   .defer(d3.json, 'output/local_authorities.json')
   .defer(d3.csv, 'output/job_density.csv', d => {
-    d.value = +d.value;
+    // Don't forget to coerce the columns
+    // with numeric values to a number
 
-    density.set(d.authority_id, d.value);
+    // You'll also need to pass the property
+    // that you wish to Map
 
     return d;
   })
-  .await(ready);
+  .await(ready); // This will run once everything is loaded
 
+// The first argument always contains an error
+// It will be filled if the data doesn't load
+// The following arguments follow the same order
+// of the data you established on the queue
 function ready(err, la, data) {
    if (err) throw err;
 
-  // Generate our topojson object
-  const feature = topojson.feature(la, la.objects.local_authorities);
 
-  // Fit map to our width and height
-  projection.fitSize([width, height], feature);
+  // Create our topojson object
+  const feature;
 
-  const path = d3.geoPath()
-    .projection(projection);
+  // You need a path generator to render the map
+  const path;
 
-  // Render
-  svg.selectAll('path')
-    .data(feature.features)
-    .enter()
-    .append('path')
-    .attr('d', path)
-    .attr('fill', d => z(density.get(d.properties.lad17cd)))
-    .on('mousemove', mousemoved)
-    .on('mouseleave', mouseleft);
-}
-
-function mousemoved(d) {
-  const [ x, y ] = d3.mouse(svg.node());
-  const { lad17nm, lad17cd } = d.properties;
-
-  d3.select(this).raise();
-
-  tooltip
-    .style('visibility', 'visible')
-    .style('left', `${x - 60}px`)
-    .style('top', `${y - 70}px`)
-    .html(`
-      <div><strong>${lad17nm}</strong></div>
-      <div class="flex">
-        <div>Job density</div>
-        <div>${density.get(lad17cd)}</div>
-      </div>
-    `)
-}
-
-function mouseleft() {
-  tooltip.style('visibility', 'hidden');
+  // At last! Here you will attach the map to our SVG
+  // https://d3js.org/#enter-exit
 }
 </script>
