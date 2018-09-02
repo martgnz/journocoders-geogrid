@@ -2,13 +2,13 @@
 
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and use the resulting geometry with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
 
-## Install R
+## Installing R
 
 First you need to install R. If you're using macOS you can simply use [homebrew](https://brew.sh) with `brew install R`. If you use GNU/Linux, please refer to your package manager. If you use Windows you can [install R through CRAN](https://cran.rstudio.com/).
 
 Once you have R installed please do get [RStudio](https://www.rstudio.com/products/rstudio/download/#download). It is a comfortable environment to write R code, with inline documentation and examples.
 
-## Install geogrid
+### Installing geogrid
 
 After you have a R setup we can proceed to install geogrid. The standard way to get packages is by calling `install.packages`, so you can do `install.packages('geogrid')` in the R console.
 
@@ -48,7 +48,7 @@ Now we can install `geogrid`
 install.packages("geogrid")
 ```
 
-## Install geojsonio
+### Installing geojsonio
 
 We will use [geojsonio](https://github.com/ropensci/geojsonio) to write a TopoJSON file from R. This is also troublesome. Make sure to look at their README for more information.
 
