@@ -49,7 +49,7 @@ const svg = d3.select('body')
 // Which scale do you think it's more appropiate?
 // https://github.com/d3/d3-scale
 
-// Here we can declare our Map to associate
+// Here we can declare d3.map to associate
 // the geographic data with our external dataset
 // https://github.com/d3/d3-collection/#maps
 
@@ -60,8 +60,8 @@ d3.queue()
     // Don't forget to coerce the columns
     // with numeric values to a number
 
-    // You'll also need to pass the property
-    // that you wish to Map
+    // You'll also need to pass to d3.map the ID and value
+    // that you want to use with the geographic data
 
     return d;
   })
@@ -83,4 +83,6 @@ function ready(err, la, data) {
   // At last! Here you will attach the map to our SVG
   // https://d3js.org/#enter-exit
 }
+
+// Here you can add our mousemove and mouseleave functions
 </script>
