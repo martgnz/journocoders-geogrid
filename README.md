@@ -54,7 +54,13 @@ install.packages("geogrid")
 
 We will use [geojsonio](https://github.com/ropensci/geojsonio) to write a TopoJSON file from R. This is also troublesome. Make sure to look at their README for more information.
 
-First install a specific version of `v8`
+You can simply try to install the package.
+
+```r
+install.packages("geojsonio")
+```
+
+If you're on a Mac and it doesnt' work, first install a specific version of `v8`
 
 ```sh
 $ brew install v8@3.15
