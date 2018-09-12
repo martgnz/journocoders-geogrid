@@ -306,7 +306,7 @@ svg.selectAll('path')
 
 As you can see, we use our `density` variable with a getter, passing as an argument the column that has the ID in the cartography.
 
-Of course, as we haven't created a colour scale so you won't see anything. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in red, and the ones with more than one will be painted in blue.
+Of course, as we haven't created a colour scale so you won't see anything. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in orange, and the ones with more than one will be painted in blue.
 
 Go to the beginning, after our initial projection declaration, and add
 
