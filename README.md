@@ -142,7 +142,7 @@ df_hex <- assign_polygons(df, tmp)
 
 And now you can export it to TopoJSON (you can inspect the resulting file with [mapshaper](http://mapshaper.org))
 
-![Mapshaper](https://user-images.githubusercontent.com/1236790/44956344-50f23200-aeba-11e8-90b9-cbd36265f866.png)
+![Mapshaper](https://user-images.githubusercontent.com/1236790/45445909-7e618b80-b6c3-11e8-8401-af141c2e4e1f.png)
 
 ```r
 topojson_write(df_hex, object_name = "local_authorities", file = "output/london_la.json")
