@@ -411,4 +411,4 @@ function mouseleft() {
 }
 ```
 
-![tooltip](https://user-images.githubusercontent.com/1236790/45449032-f2079680-b6cb-11e8-9965-2d5210f46c2a.png)
+![wiii](https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif)
