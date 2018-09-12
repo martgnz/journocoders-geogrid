@@ -1,6 +1,6 @@
 # journocoders-geogrid
 
-In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and visualise the resulting geometry of London's local areas with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
+In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and visualise the resulting geometry of London's local areas with D3.
 
 While a plain choropleth map is useful in most situations and easy for the reader, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
 
