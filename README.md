@@ -1,7 +1,5 @@
 # journocoders-geogrid
 
-<img src="https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif" alt="wiii" style="max-width:100%;" width="250">
-
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and use the resulting geometry with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
 
 While a plain choropleth map is useful in most situations and easy for the reader, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
@@ -9,6 +7,9 @@ While a plain choropleth map is useful in most situations and easy for the reade
 There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
 
 To start, please download (or clone) this repository with the following [link](https://github.com/martgnz/journocoders-geogrid/archive/master.zip).
+
+<img src="https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif" alt="wiii" style="max-width:100%;" width="250">
+
 
 ## Installing R
 
