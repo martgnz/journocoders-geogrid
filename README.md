@@ -2,6 +2,8 @@
 
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and use the resulting geometry with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
 
+While a plain choropleth map is useful in most situations and easy for the reader, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
+
 There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
 
 ## Installing R
@@ -82,7 +84,7 @@ install.packages("geojsonio")
 
 If you made it here, congrats! It can take a while to get `gdal2` to cooperate.
 
-Now we will use `geogrid` to generate some hexagons of the [Local Authorities](http://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2017-super-generalised-clipped-boundaries-in-great-britain). You can find the whole R code in `script.R`, here we will go step by step.
+Now we will use `geogrid` to generate some hexagons of London's [local authorities](https://en.wikipedia.org/wiki/Local_government_in_London). You can find the whole R code in `script.R`, here we will go step by step.
 
 ### Seeding the grid
 
@@ -98,7 +100,7 @@ setwd("~/YOUR/LOCAL/FOLDER/journocoders-geogrid/")
 Now, we're ready to read our shapefile
 
 ```r
-df <- read_polygons("src/Local_Authority_Districts_December_2017_Super_Generalised_Clipped_Boundaries_in_Great_Britain.shp")
+df <- read_polygons(system.file("extdata", "london_LA.json", package = "geogrid"))
 
 ```
 
@@ -110,7 +112,7 @@ par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 
 And now we can loop with `calculate_grid` to get multiple hexagon grids
 
-![Hexagon grid](https://user-images.githubusercontent.com/1236790/44955703-a7a63e80-aeaf-11e8-95bb-75c83e86d7bb.png)
+![Hexagon grid](https://user-images.githubusercontent.com/1236790/45445715-e82d6580-b6c2-11e8-9966-9e728c613447.png)
 
 ```r
 for (i in 1:6) {
@@ -121,7 +123,7 @@ for (i in 1:6) {
 
 Let's see how does it look using squares
 
-![Square grid](https://user-images.githubusercontent.com/1236790/44955723-010e6d80-aeb0-11e8-9bb3-94f330bc474c.png)
+![Square grid](https://user-images.githubusercontent.com/1236790/45445718-e9f72900-b6c2-11e8-9726-e2ee3e151219.png)
 
 ```r
 for (i in 1:6) {
@@ -138,7 +140,7 @@ When you find a seed that you're comfortable with we retrieve it individually.
 tmp <- calculate_grid(shape = df, grid_type = "hexagonal", seed = 5)
 ```
 
-Now let's retrieve a SpatialDataFrame out of the hexagon. This will take a long time, in my case it was like an hour.
+Now let's retrieve a SpatialDataFrame out of the hexagon. This can take a long time depending on the number of polygons of your data. In this case it will be quick.
 
 ```r
 df_hex <- assign_polygons(df, tmp)
@@ -146,10 +148,10 @@ df_hex <- assign_polygons(df, tmp)
 
 And now you can export it to TopoJSON (you can inspect the resulting file with [mapshaper](http://mapshaper.org))
 
-![Mapshaper](https://user-images.githubusercontent.com/1236790/44956344-50f23200-aeba-11e8-90b9-cbd36265f866.png)
+![Mapshaper](https://user-images.githubusercontent.com/1236790/45445909-7e618b80-b6c3-11e8-8401-af141c2e4e1f.png)
 
 ```r
-topojson_write(df_hex, object_name = "local_authorities", file = "output/local_authorities.json")
+topojson_write(df_hex, object_name = "local_authorities", file = "output/london_la.json")
 ```
 
 ## Visualising with D3
@@ -256,7 +258,191 @@ Reload the page and you'll see all the authorities rendered in their own element
 
 ### Visualising data
 
-…
+At this stage you should have a nice map of London's local authorities. However, we need some data! Luckily, we already have our cleansed CSV in the `output` folder.
+
+Remember, for mapping with external datasets you'll always need a property that serves as an ID on the cartography. That identifier should match in the dataset.
+
+The easiest way to add data from an external data source to a D3 map is by using [d3.map](https://github.com/d3/d3-collection/#maps). This little utility functions as a sort of associative array.
+
+You can declare our `density` variable before loading the data with
+
+```javascript
+const density = d3.map();
+````
+
+Later, on the loading stage, you can set the ID and the value. You can also use this step to coerce the value to a number.
+
+```javascript
+
+d3.queue()
+  .defer(d3.json, 'output/london_la.json')
+  .defer(d3.csv, 'output/job_density.csv', d => {
+    // D3 loads everything as a string on CSVs
+    // so we need to change our value to a number!
+    d.value = +d.value;
+
+    // Sets our value retriever
+    // The first argument is the ID on the CSV
+    // The second argument is the column that has the value
+    density.set(d.authority_id, d.value);
+
+    return d;
+  })
+  .await(ready);
+```
+
+After that, we will need to add just *one* line to our rendering function and we will have our CSV associated with the map!
+
+```javascript
+svg.selectAll('path')
+  .data(feature.features)
+  .enter()
+  .append('path')
+  .attr('d', path)
+  .attr('fill', d => density.get(d.properties.GSS_CODE));
+```
+
+As you can see, we use our `density` variable with a getter, passing as an argument the column that has the ID in the cartography. Reload the page and oops! No colour...
+
+Of course, as we haven't created a colour scale. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in red, and the ones with more than one will be painted in orange.
+
+```javascript
+const z = d3.scaleThreshold()
+  .domain([1]) // This creates two breaks, below 1 and more than 1
+  .range(['#ef8a62','#67a9cf']); // The colours that we want to assign
+```
+
+With this declared you can pass it again in our rendering function
+
+```javascript
+svg.selectAll('path')
+  .data(feature.features)
+  .enter()
+  .append('path')
+  .attr('d', path)
+  .attr('fill', d => z(density.get(d.properties.GSS_CODE))); // We've added the scale
+```
+
+Voilà! You should have a map with the areas coloured by job density.
+
+![D3 map](https://user-images.githubusercontent.com/1236790/45448484-5cb7d280-b6ca-11e8-8784-cce88504f21c.png)
 
 ### Adding interaction
-…
+
+This looks nice, but honestly that map can be made with ggplot in 5 minutes. D3 really pays off once you want to go beyond a static graph, so let's add a simple tooltip.
+
+First, add a container for our tooltip at the beginning
+
+```javascript
+const tooltip = d3.select('body')
+  .append('div')
+  .attr('class', 'tooltip');
+```
+
+You can also add the following sample styles to it.
+
+```html
+<style>
+
+.tooltip {
+  position: absolute;
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 150px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #aaa;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+...
+
+</style>
+```
+
+With that done we will simply listen to the `mousemove` and `mouseleave` events, and call a function when something happens.
+
+```javascript
+  svg.selectAll('path')
+    .data(feature.features)
+    .enter()
+    .append('path')
+    .attr('d', path)
+    .attr('fill', d => z(density.get(d.properties.GSS_CODE)))
+    .on('mousemove', mousemoved) // call a function called mousemoved once a feature is hovered
+    .on('mouseleave', mouseleft) // call a function called mouseleft once you leave a feature
+```
+
+Now we can create our `mousemoved` and `mouseleft` functions.
+
+```javascript
+function mousemoved(d) {
+  console.log(d.properties) // This contains our hovered feature
+}
+
+function mouseleft() {
+  console.log(d.properties) // This contains the feature we just left
+}
+```
+
+If you reload the page and open the browser console you'll see the properties of each feature on hover. Now what we want to do is to make the tooltip visible on hover, and fill it with some of those properties
+
+```javascript
+function mousemoved(d) {
+  const [ x, y ] = d3.mouse(svg.node()); // This gets the x and y coordinates of the mouse
+  const { NAME, GSS_CODE } = d.properties; // Extract the name and the ID of the hovered feature
+
+  d3.select(this).raise(); // Simple tweak to put the hovered layer on top
+
+  tooltip
+    .style('visibility', 'visible') // Make the tooltip visible
+    .style('left', `${x - 60}px`) // Position it horizontally according to the mouse minus an offset
+    .style('top', `${y - 70}px`) // Position it vertically according to the mouse minus an offset
+    .html(`
+      <div><strong>${NAME}</strong></div> // Renders the feature name
+      <div class="flex">
+        <div>Job density</div>
+        <div>${density.get(GSS_CODE)}</div> // Access our data with the feature ID
+      </div>
+    `)
+}
+```
+
+And you can simply hide the tooltip when you leave the mouse.
+
+```javascript
+function mouseleft() {
+  tooltip.style('visibility', 'hidden');
+}
+```
+
+You can also add some tweaks to our hexagon styles so it looks fancier!
+
+```html
+<style>
+
+path {
+  stroke: white;
+  stroke-opacity: 0.3;
+  pointer-events: all;
+}
+
+path:hover {
+  stroke: black;
+  stroke-width: 2;
+  stroke-opacity: 1;
+}
+
+...
+
+</style>
+```
+
+![wiii](https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif)

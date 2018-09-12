@@ -41,7 +41,7 @@ path:hover {
 const margin = { top: 10, right: 10, bottom: 10, left: 10 };
 
 const width = 500 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+const height = 500 - margin.top - margin.bottom;
 
 const tooltip = d3.select('body')
   .append('div')
@@ -61,12 +61,12 @@ const projection = d3
 
 const z = d3.scaleThreshold()
   .domain([1])
-  .range(['#ef8a62','#67a9cf'])
+  .range(['#ef8a62','#67a9cf']);
 
 const density = d3.map();
 
 d3.queue()
-  .defer(d3.json, 'output/local_authorities.json')
+  .defer(d3.json, 'output/london_la.json')
   .defer(d3.csv, 'output/job_density.csv', d => {
     d.value = +d.value;
 
@@ -94,14 +94,14 @@ function ready(err, la, data) {
     .enter()
     .append('path')
     .attr('d', path)
-    .attr('fill', d => z(density.get(d.properties.lad17cd)))
+    .attr('fill', d => z(density.get(d.properties.GSS_CODE)))
     .on('mousemove', mousemoved)
     .on('mouseleave', mouseleft);
 }
 
 function mousemoved(d) {
   const [ x, y ] = d3.mouse(svg.node());
-  const { lad17nm, lad17cd } = d.properties;
+  const { NAME, GSS_CODE } = d.properties;
 
   d3.select(this).raise();
 
@@ -110,10 +110,10 @@ function mousemoved(d) {
     .style('left', `${x - 60}px`)
     .style('top', `${y - 70}px`)
     .html(`
-      <div><strong>${lad17nm}</strong></div>
+      <div><strong>${NAME}</strong></div>
       <div class="flex">
         <div>Job density</div>
-        <div>${density.get(lad17cd)}</div>
+        <div>${density.get(GSS_CODE)}</div>
       </div>
     `)
 }
