@@ -8,8 +8,9 @@ There are several ways to transform geographic data to hexagons. This method is 
 
 To start, please download (or clone) this repository with the following [link](https://github.com/martgnz/journocoders-geogrid/archive/master.zip).
 
-<img src="https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif" alt="wiii" style="max-width:100%;" width="250">
-
+<a href="https://github.com/martgnz/journocoders-geogrid/archive/master.zip">
+  <img src="https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif" alt="wiii" style="max-width:100%;" width="250">
+</a>
 
 ## Installing R
 
