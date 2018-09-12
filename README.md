@@ -350,6 +350,12 @@ You can also add the following sample styles to it.
   pointer-events: none;
 }
 
+.flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
 ...
 
 </style>
@@ -409,6 +415,28 @@ And you can simply hide the tooltip when you leave the mouse.
 function mouseleft() {
   tooltip.style('visibility', 'hidden');
 }
+```
+
+You can also add some tweaks to our hexagon styles so it looks fancier!
+
+```html
+<style>
+
+path {
+  stroke: white;
+  stroke-opacity: 0.3;
+  pointer-events: all;
+}
+
+path:hover {
+  stroke: black;
+  stroke-width: 2;
+  stroke-opacity: 1;
+}
+
+...
+
+</style>
 ```
 
 ![wiii](https://user-images.githubusercontent.com/1236790/45449124-3abf4f80-b6cc-11e8-874c-accabf2d87a2.gif)
