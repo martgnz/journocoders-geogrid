@@ -12,7 +12,7 @@ Once you have R installed please do get [RStudio](https://www.rstudio.com/produc
 
 ### Installing geogrid
 
-After you have a R setup we can proceed to install geogrid. The standard way to get packages is by calling `install.packages`, so you can do `install.packages('geogrid')` in the R console.
+After you have a R setup we can proceed to install geogrid. Open Rstudio first. At the bottom you'll see the R console. There you can run commands and inspect their output. The standard way to get packages in R is by calling `install.packages`, so you can do `install.packages('geogrid')` in the console.
 
 However, I've had problems doing this with the latest R as by default there are some conflicting packages (`units` and `sf`).
 
