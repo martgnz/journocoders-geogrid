@@ -252,7 +252,74 @@ Reload the page and you'll see all the authorities rendered in their own element
 
 ### Visualising data
 
-…
+At this stage you should have a nice map of London's local authorities. However, we need some data! Luckily, we already have our cleansed CSV in the `output` folder.
+
+Remember, for mapping with external datasets you'll always need a property that serves as an ID on the cartography. That identifier should match in the dataset.
+
+The easiest way to add data from an external data source to a D3 map is by using [d3.map](https://github.com/d3/d3-collection/#maps). This little utility functions as a sort of associative array.
+
+You can declare our `density` variable before loading the data with
+
+```javascript
+const density = d3.map();
+````
+
+Later, on the loading stage, you can set the ID and the value. You can also use this step to coerce the value to a number.
+
+```javascript
+
+d3.queue()
+  .defer(d3.json, 'output/london_la.json')
+  .defer(d3.csv, 'output/job_density.csv', d => {
+    // D3 loads everything as a string on CSVs
+    // so we need to change our value to a number!
+    d.value = +d.value;
+
+    // Sets our value retriever
+    // The first argument is the ID on the CSV
+    // The second argument is the column that has the value
+    density.set(d.authority_id, d.value);
+
+    return d;
+  })
+  .await(ready);
+```
+
+After that, we will need to add just *one* line to our rendering function and we will have our CSV associated with the map!
+
+```javascript
+svg.selectAll('path')
+  .data(feature.features)
+  .enter()
+  .append('path')
+  .attr('d', path)
+  .attr('fill', d => density.get(d.properties.GSS_CODE));
+```
+
+As you can see, we use our `density` variable with a getter, passing as an argument the column that has the ID in the cartography. Reload the page and oops! No colour...
+
+Of course, as we haven't created a colour scale. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in red, and the ones with more than one will be painted in orange.
+
+```javascript
+const z = d3.scaleThreshold()
+  .domain([1]) // This creates two breaks, below 1 and more than 1
+  .range(['#ef8a62','#67a9cf']); // The colours that we want to assign
+```
+
+With this declared you can pass it again in our rendering function
+
+```javascript
+svg.selectAll('path')
+  .data(feature.features)
+  .enter()
+  .append('path')
+  .attr('d', path)
+  .attr('fill', d => z(density.get(d.properties.GSS_CODE))); // We've added the scale
+```
+
+Voilà! You should have a map with the areas coloured by job density.
+
+![D3 map](https://user-images.githubusercontent.com/1236790/45448484-5cb7d280-b6ca-11e8-8784-cce88504f21c.png)
 
 ### Adding interaction
 …
