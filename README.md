@@ -10,7 +10,7 @@ To start, please download (or clone) this repository with the following [link](h
 
 ## Installing R
 
-First you need to install R. If you're using macOS you can simply use [homebrew](https://brew.sh) with `brew install R` (see install instructions if you don't know about it). If you use GNU/Linux, please refer to your package manager. If you use Windows you can [install R through CRAN](https://cran.rstudio.com/).
+First you need to install R. If you're using macOS you can simply use [homebrew](https://brew.sh) with `brew install R` (see [install instructions](https://brew.sh), you'll need to open the Mac terminal). If you use GNU/Linux, please refer to your package manager. If you use Windows you can [install R through CRAN](https://cran.rstudio.com/).
 
 Once you have R installed please do get [RStudio](https://www.rstudio.com/products/rstudio/download/#download). It is a comfortable environment to write R code, with inline documentation and examples.
 
