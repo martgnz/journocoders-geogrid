@@ -86,6 +86,8 @@ If you made it here, congrats! It can take a while to get `gdal2` to cooperate.
 
 Now we will use `geogrid` to generate some hexagons of London's [local authorities](https://en.wikipedia.org/wiki/Local_government_in_London). You can find the whole R code in `script.R`, here we will go step by step.
 
+To run a set of commands in Rstudio you need to select the text and do <kbd>⌘/Ctrl + Enter</kbd>.
+
 ### Seeding the grid
 
 First, we need to load the library and switch to the project folder
@@ -110,7 +112,7 @@ We can set the arguments for `plot` to render different variations of our grid
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 ```
 
-And now we can loop with `calculate_grid` to get multiple hexagon grids
+And now we can loop with `calculate_grid` to get multiple hexagon grids. Click on "Plots" on the right side panel to see the grid.
 
 ![Hexagon grid](https://user-images.githubusercontent.com/1236790/45445715-e82d6580-b6c2-11e8-9966-9e728c613447.png)
 
@@ -158,7 +160,7 @@ topojson_write(df_hex, object_name = "local_authorities", file = "output/london_
 
 Now that we have the geometry, let the fun begin. To view our graphic locally and be able to request data we need to create a local development server. It sounds scary but it isn't! You can install [served](http://enjalot.github.io/served/), and drag & drop this folder inside the app to work with the map.
 
-After your localhost is available you can open the same folder with your code editor of choice and go to `index.html`.
+After your localhost is available you can open the same folder with your code editor of choice (install [Atom](https://atom.io) if you don't have any) and go to `index.html`.
 
 ### Rendering the map
 
