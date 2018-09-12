@@ -2,7 +2,7 @@ library(geogrid)
 library(geojsonio)
 
 # Change this according to your folder
-setwd("~/Projects/journocoders-geogrid/")
+setwd("~/journocoders-geogrid-master/")
 
 df <- read_polygons(system.file("extdata", "london_LA.json", package = "geogrid"))
 
