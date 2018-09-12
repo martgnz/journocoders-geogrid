@@ -2,9 +2,9 @@
 
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and visualise the resulting geometry of London's local areas with D3.
 
-While a plain choropleth map is useful in most situations and easy for the reader, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
+While a plain choropleth map is useful in most situations and easy for the reader to understand, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
 
-There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
+There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those aggregate points by an area (e.g. there are 100 points inside this cell).
 
 To start, please download (or clone) this repository with the following [link](https://github.com/martgnz/journocoders-geogrid/archive/master.zip).
 
