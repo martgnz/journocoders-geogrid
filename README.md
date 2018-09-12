@@ -322,4 +322,93 @@ Voilà! You should have a map with the areas coloured by job density.
 ![D3 map](https://user-images.githubusercontent.com/1236790/45448484-5cb7d280-b6ca-11e8-8784-cce88504f21c.png)
 
 ### Adding interaction
-…
+
+This looks nice, but honestly that map can be made with ggplot in 5 minutes. D3 really pays off once you want to go beyond a static graph, so let's add a simple tooltip.
+
+First, add a container for our tooltip at the beginning
+
+```javascript
+const tooltip = d3.select('body')
+  .append('div')
+  .attr('class', 'tooltip');
+```
+
+You can also add the following sample styles to it.
+
+```html
+<style>
+
+.tooltip {
+  position: absolute;
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 150px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #aaa;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+...
+
+</style>
+```
+
+With that done we will simply listen to the `mousemove` and `mouseleave` events, and call a function when something happens.
+
+```javascript
+  svg.selectAll('path')
+    .data(feature.features)
+    .enter()
+    .append('path')
+    .attr('d', path)
+    .attr('fill', d => z(density.get(d.properties.GSS_CODE)))
+    .on('mousemove', mousemoved) // call a function called mousemoved once a feature is hovered
+    .on('mouseleave', mouseleft) // call a function called mouseleft once you leave a feature
+```
+
+Now we can create our `mousemoved` and `mouseleft` functions.
+
+```javascript
+function mousemoved(d) {
+  console.log(d.properties) // This contains our hovered feature
+}
+
+function mouseleft() {
+  console.log(d.properties) // This contains the feature we just left
+}
+```
+
+If you reload the page and open the browser console you'll see the properties of each feature on hover. Now what we want to do is to make the tooltip visible on hover, and fill it with some of those properties
+
+```javascript
+function mousemoved(d) {
+  const [ x, y ] = d3.mouse(svg.node()); // This gets the x and y coordinates of the mouse
+  const { NAME, GSS_CODE } = d.properties; // Extract the name and the ID of the hovered feature
+
+  d3.select(this).raise(); // Simple tweak to put the hovered layer on top
+
+  tooltip
+    .style('visibility', 'visible') // Make the tooltip visible
+    .style('left', `${x - 60}px`) // Position it horizontally according to the mouse minus an offset
+    .style('top', `${y - 70}px`) // Position it vertically according to the mouse minus an offset
+    .html(`
+      <div><strong>${NAME}</strong></div> // Renders the feature name
+      <div class="flex">
+        <div>Job density</div>
+        <div>${density.get(GSS_CODE)}</div> // Access our data with the feature ID
+      </div>
+    `)
+}
+```
+
+And you can simply hide the tooltip when you leave the mouse.
+
+```javascript
+function mouseleft() {
+  tooltip.style('visibility', 'hidden');
+}
+```
+
+![tooltip](https://user-images.githubusercontent.com/1236790/45449032-f2079680-b6cb-11e8-9965-2d5210f46c2a.png)
