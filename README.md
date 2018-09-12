@@ -6,6 +6,8 @@ While a plain choropleth map is useful in most situations and easy for the reade
 
 There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
 
+To start, please download (or clone) this repository with the following [link](https://github.com/martgnz/journocoders-geogrid/archive/master.zip).
+
 ## Installing R
 
 First you need to install R. If you're using macOS you can simply use [homebrew](https://brew.sh) with `brew install R` (see install instructions if you don't know about it). If you use GNU/Linux, please refer to your package manager. If you use Windows you can [install R through CRAN](https://cran.rstudio.com/).
