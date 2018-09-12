@@ -2,6 +2,8 @@
 
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and use the resulting geometry with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
 
+There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
+
 ## Installing R
 
 First you need to install R. If you're using macOS you can simply use [homebrew](https://brew.sh) with `brew install R`. If you use GNU/Linux, please refer to your package manager. If you use Windows you can [install R through CRAN](https://cran.rstudio.com/).
@@ -146,25 +148,9 @@ topojson_write(df_hex, object_name = "local_authorities", file = "output/local_a
 
 ## Visualising with D3
 
-Now that we have the geometry, let the fun begin. If you don't have it already, please install a local http server to preview the map. If you have macOS, open the terminal (open Spotlight with <kbd>⌘ + space</kbd> and search for terminal), navigate to the project folder and run the built-in Python server
+Now that we have the geometry, let the fun begin. To view our graphic locally and be able to request data we need to create a local development server. It sounds scary but it isn't! You can install [served](http://enjalot.github.io/served/), and drag & drop this folder inside the app to work with the map.
 
-```sh
-$ cd ~/YOUR/PROJECT/FOLDER/journocoders-geogrid && python -m SimpleHTTPServer
-```
-
-If you use Windows or Linux you can also use that if you have Python installed, but in general I recommend to install [node](https://nodejs.org/en/download/) and use `http-server` instead.
-
-```
-npm i -g http-server
-```
-
-And the same applies
-
-```sh
-$ cd ~/YOUR/PROJECT/FOLDER/journocoders-geogrid && http-server
-```
-
-Now you can open the same folder with your code editor of choice and go to `index.html`.
+After your localhost is available you can open the same folder with your code editor of choice and go to `index.html`.
 
 ### Rendering the map
 
