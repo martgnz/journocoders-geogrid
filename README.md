@@ -266,13 +266,13 @@ Remember, for mapping with external datasets you'll always need a property that 
 
 The easiest way to add data from an external data source to a D3 map is by using [d3.map](https://github.com/d3/d3-collection/#maps). This little utility functions as a sort of associative array.
 
-You can declare our `density` variable before loading the data with
+Go before the `d3.queue()` declaration and set our `density` variable with
 
 ```javascript
 const density = d3.map();
 ````
 
-Later, on the loading stage, you can set the ID and the value. You can also use this step to coerce the value to a number.
+On the loading stage you can set the ID and the value that will be associated with this variable. You can also use this step to coerce the value to a number.
 
 ```javascript
 
@@ -293,7 +293,7 @@ d3.queue()
   .await(ready);
 ```
 
-After that, we will need to add just *one* line to our rendering function and we will have our CSV associated with the map!
+After that, we will need to add just *one* line to our rendering function and we will have the fill of our map associated with the external CSV!
 
 ```javascript
 svg.selectAll('path')
@@ -304,9 +304,11 @@ svg.selectAll('path')
   .attr('fill', d => density.get(d.properties.GSS_CODE));
 ```
 
-As you can see, we use our `density` variable with a getter, passing as an argument the column that has the ID in the cartography. Reload the page and oops! No colour...
+As you can see, we use our `density` variable with a getter, passing as an argument the column that has the ID in the cartography.
 
-Of course, as we haven't created a colour scale. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in red, and the ones with more than one will be painted in orange.
+Of course, as we haven't created a colour scale so you won't see anything. There are dozens of methods inside D3 to make this simple. For our purposes a simple [threshold scale](https://github.com/d3/d3-scale#threshold-scales) will work. The areas with less than 1 job per person will be coloured in red, and the ones with more than one will be painted in blue.
+
+Go to the beginning, after our initial projection declaration, and add
 
 ```javascript
 const z = d3.scaleThreshold()
@@ -333,7 +335,7 @@ Voilà! You should have a map with the areas coloured by job density.
 
 This looks nice, but honestly that map can be made with ggplot in 5 minutes. D3 really pays off once you want to go beyond a static graph, so let's add a simple tooltip.
 
-First, add a container for our tooltip at the beginning
+First, add a container for our tooltip at the beginning of the code.
 
 ```javascript
 const tooltip = d3.select('body')
@@ -369,7 +371,7 @@ You can also add the following sample styles to it.
 </style>
 ```
 
-With that done we will simply listen to the `mousemove` and `mouseleave` events, and call a function when something happens.
+With that done we will simply listen to the `mousemove` and `mouseleave` events in our rendering stage, and call a function when something happens.
 
 ```javascript
   svg.selectAll('path')
@@ -382,7 +384,7 @@ With that done we will simply listen to the `mousemove` and `mouseleave` events,
     .on('mouseleave', mouseleft) // call a function called mouseleft once you leave a feature
 ```
 
-Now we can create our `mousemoved` and `mouseleft` functions.
+Now we can create our `mousemoved` and `mouseleft` functions at the end
 
 ```javascript
 function mousemoved(d) {
