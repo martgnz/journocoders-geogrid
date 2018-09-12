@@ -9,7 +9,7 @@ df <- read_polygons(system.file("extdata", "london_LA.json", package = "geogrid"
 # Set arguments for plot
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 
-# Hexagonal grid with 6 seeds (takes a while…)
+# Hexagonal grid with 6 seeds
 for (i in 1:6) {
   grid_hexagon <- calculate_grid(shape = df, learning_rate = 0.05, grid_type = "hexagonal", seed = i)
   plot(grid_hexagon, main = paste("Seed", i, sep = " "))
@@ -21,7 +21,7 @@ for (i in 1:6) {
   sp::plot(grid_square, main = paste("Seed", i, sep = " "))
 }
 
-# Get a SpatialDataFrame from our desired grid (takes ages…)
+# Get a SpatialDataFrame from our desired grid
 tmp <- calculate_grid(shape = df, grid_type = "hexagonal", seed = 6)
 df_hex <- assign_polygons(df, tmp)
 

@@ -134,7 +134,7 @@ When you find a seed that you're comfortable with we retrieve it individually.
 tmp <- calculate_grid(shape = df, grid_type = "hexagonal", seed = 5)
 ```
 
-Now let's retrieve a SpatialDataFrame out of the hexagon. This will take a long time, in my case it was like an hour.
+Now let's retrieve a SpatialDataFrame out of the hexagon. This can take a long time depending on the number of polygons of your data. In this case it will be quick.
 
 ```r
 df_hex <- assign_polygons(df, tmp)
