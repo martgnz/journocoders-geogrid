@@ -90,7 +90,7 @@ To run a set of commands in Rstudio you need to select the text and do <kbd>⌘/
 
 ### Seeding the grid
 
-First, we need to load the library and switch to the project folder
+First, we need to load the library and switch to the project folder. You need to *change* this path according to your system.
 
 ```r
 library(geojsonio)
