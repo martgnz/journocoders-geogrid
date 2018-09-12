@@ -158,7 +158,7 @@ topojson_write(df_hex, object_name = "local_authorities", file = "output/london_
 
 ## Visualising with D3
 
-Now that we have the geometry, let the fun begin. To view our graphic locally and be able to request data we need to create a local development server. It sounds scary but it isn't! You can install [served](http://enjalot.github.io/served/), and drag & drop this folder inside the app to work with the map.
+Now that we have the geometry, let the fun begin. To view our graphic locally and be able to request data we need to create a local development server. It sounds scary but it isn't! If you don't know what I'm talking about, please install [served](http://enjalot.github.io/served/), and drag & drop this folder inside the app to work with the map.
 
 After your localhost is available you can open the same folder with your code editor of choice (install [Atom](https://atom.io) if you don't have any) and go to `index.html`.
 
