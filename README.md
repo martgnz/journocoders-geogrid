@@ -2,6 +2,8 @@
 
 In this tutorial we will learn to make hexagonal grids using the [geogrid](https://github.com/jbaileyh/geogrid) package and use the resulting geometry with D3. This is a simplified version of the author's own reference, aimed at getting the spatial data out of R.
 
+While a plain choropleth map is useful in most situations and easy for the reader, a symbolic representation with hexagons can be more accurate as you don't obscure small areas.
+
 There are several ways to transform geographic data to hexagons. This method is intended for creating your own cartography from a set of geographic features. This produces a different output than libraries like [d3-hexbin](https://github.com/d3/d3-hexbin) or [d3-hexgrid](https://github.com/larsvers/d3-hexgrid), as those bin points in a fixed area for density-graduated data visualisations.
 
 ## Installing R
@@ -76,7 +78,7 @@ install.packages("geojsonio")
 
 If you made it here, congrats! It can take a while to get `gdal2` to cooperate.
 
-Now we will use `geogrid` to generate some hexagons of the [Local Authorities](http://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2017-super-generalised-clipped-boundaries-in-great-britain). You can find the whole R code in `script.R`, here we will go step by step.
+Now we will use `geogrid` to generate some hexagons of London's [local authorities](https://en.wikipedia.org/wiki/Local_government_in_London). You can find the whole R code in `script.R`, here we will go step by step.
 
 ### Seeding the grid
 
@@ -92,7 +94,7 @@ setwd("~/YOUR/LOCAL/FOLDER/journocoders-geogrid/")
 Now, we're ready to read our shapefile
 
 ```r
-df <- read_polygons("src/Local_Authority_Districts_December_2017_Super_Generalised_Clipped_Boundaries_in_Great_Britain.shp")
+df <- read_polygons(system.file("extdata", "london_LA.json", package = "geogrid"))
 
 ```
 
@@ -104,7 +106,7 @@ par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 
 And now we can loop with `calculate_grid` to get multiple hexagon grids
 
-![Hexagon grid](https://user-images.githubusercontent.com/1236790/44955703-a7a63e80-aeaf-11e8-95bb-75c83e86d7bb.png)
+![Hexagon grid](https://user-images.githubusercontent.com/1236790/45445715-e82d6580-b6c2-11e8-9966-9e728c613447.png)
 
 ```r
 for (i in 1:6) {
@@ -115,7 +117,7 @@ for (i in 1:6) {
 
 Let's see how does it look using squares
 
-![Square grid](https://user-images.githubusercontent.com/1236790/44955723-010e6d80-aeb0-11e8-9bb3-94f330bc474c.png)
+![Square grid](https://user-images.githubusercontent.com/1236790/45445718-e9f72900-b6c2-11e8-9726-e2ee3e151219.png)
 
 ```r
 for (i in 1:6) {
@@ -143,7 +145,7 @@ And now you can export it to TopoJSON (you can inspect the resulting file with [
 ![Mapshaper](https://user-images.githubusercontent.com/1236790/44956344-50f23200-aeba-11e8-90b9-cbd36265f866.png)
 
 ```r
-topojson_write(df_hex, object_name = "local_authorities", file = "output/local_authorities.json")
+topojson_write(df_hex, object_name = "local_authorities", file = "output/london_la.json")
 ```
 
 ## Visualising with D3
