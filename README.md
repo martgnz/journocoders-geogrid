@@ -55,7 +55,11 @@ install.packages("sf", type = "source", configure.args=c(
 If you have QGIS installed you can also try this per [#393](https://github.com/r-spatial/sf/issues/393#issuecomment-406124026).
 
 ```r
-install.packages("sf", type="source", --configure-args=c("--with-gdal-config=/usr/local/Cellar/gdal/HEAD-41888/bin/gdal-config --with-geos-config=/usr/local/Cellar/geos/3.6.2/bin/geos-config --with-proj-include=/usr/local/Cellar/proj/5.1.0/include --with-proj-lib=/usr/local/Cellar/proj/5.1.0/lib"))
+install.packages("sf", type = "source", --configure-args=c(
+  "--with-gdal-config=/usr/local/Cellar/gdal/HEAD-41888/bin/gdal-config",
+  "--with-geos-config=/usr/local/Cellar/geos/3.6.2/bin/geos-config",
+  "--with-proj-include=/usr/local/Cellar/proj/5.1.0/include",
+  "--with-proj-lib=/usr/local/Cellar/proj/5.1.0/lib"))
 ```
 
 Now we can install `geogrid`
