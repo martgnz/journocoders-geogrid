@@ -30,10 +30,10 @@ To fix this first do
 $ brew install udunits
 ```
 
-And then install `gdal2`
+And then install `gdal`
 
 ```sh
-$ brew install gdal2
+$ brew install gdal
 ```
 
 After that we need to tell R more information about our compiler per [#814](https://github.com/r-spatial/sf/issues/814#issuecomment-417535690).
