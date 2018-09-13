@@ -47,7 +47,7 @@ And finally compile `sf`
 
 ```r
 install.packages("sf", type = "source", configure.args=c(
-  "--with-gdal-config=/usr/local/opt/gdal2/bin/gdal-config",
+  "--with-gdal-config=/usr/local/opt/gdal/bin/gdal-config",
   "--with-proj-include=/usr/local/opt/proj/include",
   "--with-proj-lib=/usr/local/opt/proj/lib"))
 ```
@@ -87,7 +87,7 @@ $ brew install v8@3.15
 Now let's install `rgdal` with our brewed gdal
 
 ```r
-install.packages("rgdal", type = "source", configure.args="--with-gdal-config=/usr/local/opt/gdal2/bin/gdal-config")
+install.packages("rgdal", type = "source", configure.args="--with-gdal-config=/usr/local/opt/gdal/bin/gdal-config")
 ```
 
 Now we can install `geojsonio`
